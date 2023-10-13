@@ -6,9 +6,6 @@ output:
   distill::distill_article:
     self_contained: false
 ---
-
-
-
 ## Project thoughts
 
 I am interested in exploring data related to...
@@ -21,3 +18,17 @@ Crime and safety
 
 Healthcare Access and Outcomes: 
 - It would be interestiong to use healthcare data from government sources to analyze factors affecting healthcare access, and subsequently, patient outcomes. It would be interesting to look into vaccine rates and healthcare disparities specifically.
+
+##Project Milestone 2 Written Paragraph
+How does the tenure of Supreme Court judges, the level of judicial independence, and the legal origin of company law impact the protection of property rights? I hypothesize that the more judicial independence, the more protection of property rights exists in a country. This is because with greater judicial independence, judiciaries are less subject to governmental and legislative influence, which could raise issues regarding protecting data and privacy. Also, with increased judicial tenure and independence, there is a greater chance for the judiciary to successfuly protect property rights. This data set analyzes the Property Rights Index in each country in 1997 on a scale from 1 to 5, where the more protected private property is, the higher the score is. Additionally, I want to see if this variable has a relationship with the human rights index score, which uses major UN treaties as a benchmark for human rights standards. My units of analysis are individual countries, which the data set has 71 of. This will allow me to do a cross-country comparison of property rights protection with the key independent variables being tenure, judicial independence, and legal origin. However, my hypothesis will be distproved if property rights have either no correlation with any of these factors or a negative correlation. Overall, through this project, I aim to bring to light the factors that determine property rights protections across a wide range of countries. 
+
+##Final Project Milestone 2 Data Download
+```{r}
+library(readxl)
+library(tidyverse)
+jcb_data <- read_excel("~/Downloads/jcb_data.xls")
+view(jcb_data)
+```
+```{r}
+
+```
