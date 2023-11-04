@@ -43,6 +43,8 @@ visualization_1 <-
 
 visualization_1
 ```
+##There is a pattern between a country's GDP and worker protection (measured by the employment laws index). Specifically, as the GDP of a country increases, it appears that the worker protections decrease. This can be attributed to (possibly) the strength of corporate interest and decline of unions within countries with a high GDP.
+
 ```{r}
 visualization_2 <-
   jcb_data |>
@@ -51,12 +53,15 @@ visualization_2 <-
 
 visualization_2
 ```
+##The democracy index score specifically measures democracy scorse for the year 1994, except for Liberia, where the latest available year (1989) was used. The scores range from 0 to 10, with lower values indicating a less democratic environment. Therefore, this chart makes it clear that as the strength of democracy of a country increases, the GDP (logarithm) of the country also increases. This can be attributed to the  observed positive correlation between the level of democracy and economic prosperity. When a country has a more democratic environment, it  fosters political stability and a conducive climate for business and investment. Also, democracy greatly influences trade, and more democratic countries have stronger access to trade in general, which would result in a bolstering of national GDP.
+
 ```{r}
 visualization_3 <-
   jcb_data |>
+  group_by(countryn) |>
   ggplot(mapping = aes(x = countryn)) +
-  geom_bar(aes(y = lgdp_98), stat = "identity", fill = "blue") +
-  geom_bar(aes(y = P_dem94), stat = "identity", fill = "green") +
+  geom_bar(aes(y = lgdp_98), stat = "identity", fill = "blue", alpha = 0.7) +
+  geom_bar(aes(y = P_dem94), stat = "identity", fill = "green", alpha = 0.7) +
   labs(x = "Country", y = "Democracy Index Score", title = "Average GDP and Democracy Index by Country") +
   scale_y_continuous(breaks = seq(0, 80000, by = 10000)) + 
   theme_minimal()
