@@ -31,7 +31,7 @@ jcb_data <- read_excel("~/Downloads/jcb_data.xls")
 view(jcb_data)
 ```
 
-##Final Project Milestone 3 Visualizations
+##Final Project Milestone 3 Visualizations and Milestone 4 Analysis
 
 ```{r}
 visualization_1 <- 
