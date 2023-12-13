@@ -1675,16 +1675,6 @@ R2 Adj.
 </tr>
 </tbody>
 </table>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>judicial_independence_regression</span></span></code></pre>
-</div>
-<pre><code>
-Call:
-lm(formula = dependent_variable ~ new_independence, data = jcb_data)
-
-Coefficients:
-     (Intercept)  new_independence  
-           1.220             4.727  </code></pre>
 </div>
 <p>We can see in the table above that the coefficient associated with constitutional review is 4.727, which also represents the slope. We can interpret this to mean that the political freedom score increases by 1 point each time there is an associated 4.727 point increase in the judicial independence. This number has a p-value of 0.014, which is statistically significant with an alpha of 0.05. However, due to the presence of numerous confounders and factors that play into a country’s political freedom, I do not believe that this relationship can be interpreted causally.</p>
 <p>Below is a graph representing this regression.</p>
@@ -1796,16 +1786,6 @@ R2 Adj.
 </tr>
 </tbody>
 </table>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>constitutional_review_regression</span></span></code></pre>
-</div>
-<pre><code>
-Call:
-lm(formula = dependent_variable ~ new_constitutional, data = jcb_data)
-
-Coefficients:
-       (Intercept)  new_constitutional  
-             1.606               5.177  </code></pre>
 </div>
 <p>We can see in the table above that the coefficient associated with constitutional review is 5.177, which also represents the slope. We can interpret this to mean that the political freedom score increases by 1 point each time there is an associated 5.177 increase in the constitutional review score. This number has a p-value of 0.020, which is statistically significant with an alpha of 0.05. However, due to the presence of numerous confounders and factors that play into a country’s political freedom, I do not believe that this relationship can be interpreted causally.</p>
 <p>Below is a graph representing this regression.</p>
@@ -1938,22 +1918,11 @@ R2 Adj.
 </tr>
 </tbody>
 </table>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>multiple_regression</span></span></code></pre>
-</div>
-<pre><code>
-Call:
-lm(formula = dependent_variable ~ new_independence + new_constitutional, 
-    data = jcb_data)
-
-Coefficients:
-       (Intercept)    new_independence  new_constitutional  
-           -0.1226              4.1517              3.0693  </code></pre>
 </div>
 <p>In the table above, the variable with a larger effect on political freedom is judicial independence, which has a coefficient of 4.152, meaning that as we hold all else equal, political freedom increases by 1 point as judicial independence increases by 4.152 points. On the other hand, the constitutional review variable has a smaller effect, with a coefficient of 3.069. This means that as we hold all else equal, political freedom increases by 1 point as constitutional review increases by 3.069 points. Thus, we can determine that greater judicial independence is a stronger determinant of political freedom than stronger constitutional review. The judicial independence coefficient has a p-value of 0.034, which implies statistical significance at the alpha level of 0.05. The constitutional review coefficient has a p-value of 0.179, which implies a lack of statistical significance at the alpha level of 0.05. It is important to note that a multiple regression cannot be visualized in a 2D format.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Ultimately, both judicial independence and constitutional review have an impact on political freedom. However, from the multiple regression, I am more confident that judicial independence has a statistically significant impact on political freedom than constitutional review because of its greater regression coefficient and p-value that is below my selected alpha of 0.05, which implies statistical significance. Based on these results, my hypothesis is half-supported, that stronger judicial independence correlates with greater political freedom. The results support the rejection of the null hypothesis that judicial independence has no effect on political freedom. However, there are limitations to the analysis due to the presence of confounding variables that are not a part of the study. There are immeasurable factors within countries that can impact political freedom, from nationalistic sentiments to political strife. Another limitation is the lack of data for some countries, where the dataset inputs an N/A value due to countries not being able to report or access certain measurements. With more time, I could improve my analysis by including more variables within the multiple regression that may influence political freedom to gain a clearer picture on what variables most impact political freedom in a statistically significant way. Additionally, expanding the analysis to include more countries would allow for a more comprehensive analysis.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
