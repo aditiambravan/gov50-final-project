@@ -1,71 +1,164 @@
 ---
 title: "Gov 50 Final Project"
 author: "Aditi Ambravan"
-description: "My final project"
+description: "An Analysis of Judicial Checks and Balances"
 output:
   distill::distill_article:
     self_contained: false
 ---
-## Project thoughts
+## Introduction
 
-I am interested in exploring data related to...
+Right from learning about the federalist papers’ vision for judicial checks and balances, the concept of a strong, independent judiciary has fascinated me This project is an exploration of judicial checks and balances and how judicial systems impact political freedom across the world. I will be utilizing the dataset from the Dartmouth Tuck School of Business on Judicial Checks and Balances to explore the question: What aspects of a judiciary contribute to the reinforcement or weakening of political freedom? Specifically, I aim to investigate how Judicial Independence and Constitutional Review determine political freedom. Political freedom is universally defined as the ability of a nation's citizens to participate freely in the political process, and a nation’s judiciary, given that it handles free speech issues, often has a large impact on political freedom. Political freedom can be measured by a joint assessment of a country’s democracy score and index of political rights. I hypothesize that a more independent judiciary with an ability for high-level constitutional review correlates with stronger political freedom. I reason that stronger, more independent judiciaries can adequately check legislative and executive actions to determine whether or not they infringe on a citizen’s political freedom. 
 
-Crime and safety
-- Analyzing crime numbers based on demographics and areas is of interest to me as someone who has worked with crime rates and is from Chicago.
+The relevance of judicial independence and political freedom has become evident in recent decisions by the United States Supreme Court. As the judiciary becomes more intertwined with the executive branch due to recent court appointments, we have witnessed landmark court cases being overturned, leading to claims that such actions violate fundamental principles of checks and balances. My curiosity about the U.S. judicial system has expanded globally, prompting several questions. Can judiciaries in other countries act similarly? Do countries lacking political freedom have weak judicial systems? It is these inquiries that motivated my selection of this dataset.
 
-2024 Election Horse Race
-- Analyzing the candidates based off of popularity and factors that could determine their success in the upcoming presidential election. However, I am skeptical of the availability of data to execute this idea.
+## The Data
 
-Healthcare Access and Outcomes: 
-- It would be interestiong to use healthcare data from government sources to analyze factors affecting healthcare access, and subsequently, patient outcomes. It would be interesting to look into vaccine rates and healthcare disparities specifically.
+The data source I am exploring was developed by Dartmouth’s Tuck School of Business in 2004. The data includes various dependent and independent variables and represents constitutional rules in 71 countries using different variables that reflect the strength of judicial checks and balances. The countries included are those in the Maddex Encyclopedia of Constitutions, except those with transition economies (whose constitutions are rapidly changing). 
 
-##Project Milestone 2 Written Paragraph
-How does the tenure of Supreme Court judges, the level of judicial independence, and the legal origin of company law impact the protection of property rights? I hypothesize that the more judicial independence, the more protection of property rights exists in a country. This is because with greater judicial independence, judiciaries are less subject to governmental and legislative influence, which could raise issues regarding protecting data and privacy. Also, with increased judicial tenure and independence, there is a greater chance for the judiciary to successfuly protect property rights. This data set analyzes the Property Rights Index in each country in 1997 on a scale from 1 to 5, where the more protected private property is, the higher the score is. Additionally, I want to see if this variable has a relationship with the human rights index score, which uses major UN treaties as a benchmark for human rights standards. My units of analysis are individual countries, which the data set has 71 of. This will allow me to do a cross-country comparison of property rights protection with the key independent variables being tenure, judicial independence, and legal origin. However, my hypothesis will be disproved if property rights have either no correlation with any of these factors or a negative correlation. Overall, through this project, I aim to bring to light the factors that determine property rights protections across a wide range of countries. 
+<aside>
+Dataset Citation:
+"'Judicial Checks and Balances,' (with F. López-de-Silanes, C. Pop-Eleches, and A. Shleifer), Journal of Political Economy, 2004."
+</aside>
 
-##Final Project Milestone 2 Data Download
+It is important to note that the creators of the data did not measure the dependent and independent variables set themselves but were drawn from existing measurements and assessments. Specifically, I will be focusing on four variables in my analysis. The dependent variable, political freedom, is a variable that I creeated as a combination of democracy scores and the index of political rights. Both of these variables are measured on an international scale and are drawn from publicly available data. The independent variables are constitutional review and judicial independence, which represent the overall ability of a judiciary to engage in checks and balances. The Constitutional Review value is computed by the dataset authors as Constitutional review is computed as the normalized sum of (i) the judiciary review index and (ii) the rigidity of the constitution index. The Judicial Independence Score is computed by the dataset authors as the normalized sum of (i) the tenure of Supreme Court judges (ii) the tenure of administrative Court judges (iii) the case law variable. 
+
+My study is cross-sectional. Additionally, the data was collected at a single point in time, meaning it does not fill the criteria for a before/after or differences-in-differences study.
+
 ```{r}
+## Set up Chunk, Data Cleaning, and Creation of New Variables
 library(readxl)
 library(tidyverse)
 library(ggplot2)
 jcb_data <- read_excel("~/Downloads/jcb_data.xls")
-view(jcb_data)
 ```
 
-##Final Project Milestone 3 Visualizations and Milestone 4 Analysis
+## The Creation of Two New Variables
+
+The authors of the dataset indicated that political freedom is best measured by a joint assessment of the political rights index and democracy score. Therefore, I used these two provided variables to create a normalized score for political freedom. I added the Z-scores of each variable, as a normalized score should have the same mean and standard deviation to maintain the integrity of the data. The process of creating this dependent variable for political freedom can be seen below.
+
+The second variable that I created was a region variable. With 71 countries in the dataset, I wanted to be able to group the countries by region to simplify my visualization of the dependent variable. The process of creating this region variable can be seen below. 
 
 ```{r}
-visualization_1 <- 
-  jcb_data |>
-  ggplot(mapping = aes(x = lgdp_98, y = index_labor1)) +
-  geom_point() + 
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "GDP", y = "Worker Protection (Employment Laws Index)", title = "Scatterplot of GDP vs. Worker Rights and Protections")
+## Creation of dependent variable of political freedom
 
-visualization_1
+# Drop NA values from data
+jcb_data <- drop_na(jcb_data, pright)
+
+# Calculate aggregate index via Z-score sum
+jcb_data <- jcb_data |>
+  mutate(rights_zscore = (pright - mean(pright)) / sd(pright)) |>
+  mutate(democracy_zscore = (P_dem94 - mean(P_dem94) / sd(P_dem94))) |>
+  mutate(dependent_variable = rights_zscore + democracy_zscore)
+
+## Creation of Region Variable
+jcb_data <- jcb_data |>
+  mutate(region_master = case_when(europe == 1 ~ "Europe",
+                                   africa == 1 ~ "Africa",
+                                   c_amer == 1 ~ "Central America",
+                                   n_amer == 1 ~ "North America",
+                                   oceania == 1 ~ "Oceania",
+                                   meast == 1 ~ "Middle East",
+                                   america == 1 ~ "America",
+                                   asia == 1 ~ "Asia",
+                                   aurasia == 1 ~ "South Asia"))
 ```
-##There is a pattern between a country's GDP and worker protection (measured by the employment laws index). Specifically, as the GDP of a country increases, it appears that the worker protections decrease. This can be attributed to (possibly) the strength of corporate interest and decline of unions within countries with a high GDP.
+
+## Summary Plot of the Dependent Variable
 
 ```{r}
-visualization_2 <-
-  jcb_data |>
-  ggplot(mapping = aes(x = lgdp_98, y = P_dem94)) + geom_point() + geom_smooth(method = "lm") +
-  labs(x = "(Log of) GDP of Country", y = "Democracy Index Score")
-
-visualization_2
+dependent_variable_plot <- jcb_data |>
+  ggplot(aes(x = region_master, y = dependent_variable)) +
+  geom_boxplot(fill = '#FFCBCB') +
+  labs(title = "Political Freedom by Region",
+       x = "Region",
+       y = "Political Freedom Value")
+dependent_variable_plot
 ```
-##The democracy index score specifically measures democracy scorse for the year 1994, except for Liberia, where the latest available year (1989) was used. The scores range from 0 to 10, with lower values indicating a less democratic environment. Therefore, this chart makes it clear that as the strength of democracy of a country increases, the GDP (logarithm) of the country also increases. This can be attributed to the  observed positive correlation between the level of democracy and economic prosperity. When a country has a more democratic environment, it  fosters political stability and a conducive climate for business and investment. Also, democracy greatly influences trade, and more democratic countries have stronger access to trade in general, which would result in a bolstering of national GDP.
+My dependent variable for this project is the political freedom variable that I created, which combines the Z-scores of a country's political rights index and democracy score. The higher the political freedom value, the more politically free a country is, meaning that individuals are free from oppression or coercion. From the plot above, we can see that Europe, North America, and Oceania have the highest median political freedom. On the other hand. Africa and the Middle East have the lowest median political freedom scores.
+
+## Results
+
+## Regression 1: Political Freedom and Judicial Independence
+My first independent variable of interest is judicial independence. The following regression table displays the details for a regression equation involving only that variable. 
 
 ```{r}
-visualization_3 <-
-  jcb_data |>
-  group_by(countryn) |>
-  ggplot(mapping = aes(x = countryn)) +
-  geom_bar(aes(y = lgdp_98), stat = "identity", fill = "blue", alpha = 0.7) +
-  geom_bar(aes(y = P_dem94), stat = "identity", fill = "green", alpha = 0.7) +
-  labs(x = "Country", y = "Democracy Index Score", title = "Average GDP and Democracy Index by Country") +
-  scale_y_continuous(breaks = seq(0, 80000, by = 10000)) + 
-  theme_minimal()
-
-visualization_3
+## Regression Calculation: Political Freedom and Judicial Independence
+judicial_independence_regression <- lm(dependent_variable ~ new_independence, data = jcb_data)
+modelsummary::modelsummary(judicial_independence_regression,
+                           statistic = c("s.e. = {std.error}",
+                                         "p = {p.value}"),
+                           gof_map = c("nobs", "r.squared", "adj.r.squared"))
+judicial_independence_regression
 ```
+
+We can see in the table above that the coefficient associated with constitutional review is 4.727, which also represents the slope. We can interpret this to mean that the political freedom score increases by 1 point each time there is an associated 4.727 point increase in the judicial independence. This number has a p-value of 0.014, which is statistically significant with an alpha of 0.05. However, due to the presence of numerous confounders and factors that play into a country's political freedom, I do not believe that this relationship can be interpreted causally.
+
+Below is a graph representing this regression.
+
+```{r}
+## Plot of Political Freedom and Judicial Independence
+judicial_regression_plot <- jcb_data |>
+  ggplot(aes(x = new_independence, y = dependent_variable)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, color = "cornflowerblue") +
+  labs(
+    title = "Political Freedom vs. Judicial Independence",
+    x = "Judicial Independence",
+    y = "Political Freedom"
+  )
+judicial_regression_plot
+```
+
+## Regression 2: Political Freedom and Constitutional Review
+My second independent variable of interest is constitutional review. The following regression table displays the details for a regression equation involving only that variable.
+
+```{r}
+## Regression Calculation: Political Freedom and Constitutional Review
+constitutional_review_regression <- lm(dependent_variable ~ new_constitutional, data = jcb_data)
+modelsummary::modelsummary(constitutional_review_regression,
+                           statistic = c("s.e. = {std.error}",
+                                         "p = {p.value}"),
+                           gof_map = c("nobs", "r.squared", "adj.r.squared"))
+constitutional_review_regression
+```
+
+We can see in the table above that the coefficient associated with constitutional review is 5.177, which also represents the slope. We can interpret this to mean that the political freedom score increases by 1 point each time there is an associated 5.177 increase in the constitutional review score. This number has a p-value of 0.020, which is statistically significant with an alpha of 0.05. However, due to the presence of numerous confounders and factors that play into a country's political freedom, I do not believe that this relationship can be interpreted causally.
+
+Below is a graph representing this regression.
+
+```{r}
+## Plot of Political Freedom and Constitutional Review
+constitutional_regression_plot <- jcb_data |>
+  ggplot(aes(x = new_constitutional, y = dependent_variable)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, color = "darkorchid1") +
+  labs(
+    title = "Political Freedom vs. Constitutional Review",
+    x = "Constitutional Review",
+    y = "Political Freedom")
+constitutional_regression_plot
+```
+
+## Multiple Regression
+
+After conducting the two individual regressions, I am now curious to see the coefficients under a multiple regression model. Doing so allows me to assess the strength of the relationship between the dependent variable, political freedom, and multiple predictor variables once. The following table dispays the details for a multiple regression.
+
+```{r}
+## Multiple Regression for both Independent Variables
+multiple_regression <- lm(dependent_variable ~ new_independence + new_constitutional, data = jcb_data)
+modelsummary::modelsummary(multiple_regression,
+                           statistic = c("s.e. = {std.error}",
+                                         "p = {p.value}"),
+                           gof_map = c("nobs", "r.squared", "adj.r.squared"))
+multiple_regression
+```
+
+In the table above, the variable with a larger effect on political freedom is judicial independence, which has a coefficient of 4.152, meaning that as we hold all else equal, political freedom increases by 1 point as judicial independence increases by 4.152 points. On the other hand, the constitutional review variable has a smaller effect, with a coefficient of 3.069. This means that as we hold all else equal, political freedom increases by 1 point as constitutional review increases by 3.069 points. Thus, we can determine that greater judicial independence is a stronger determinant of political freedom than stronger constitutional review. The judicial independence coefficient has a p-value of 0.034, which implies statistical significance at the alpha level of 0.05. The constitutional review coefficient has a p-value of 0.179, which implies a lack of statistical significance at the alpha level of 0.05. It is important to note that a multiple regression cannot be visualized in a 2D format. 
+
+
+## Conclusion
+Ultimately, both judicial independence and constitutional review have an impact on political freedom. However, from the multiple regression, I am more confident that judicial independence has a statistically significant impact on political freedom than constitutional review because of its greater regression coefficient and p-value that is below my selected alpha of 0.05, which implies statistical significance. Based on these results, my hypothesis is half-supported, that stronger judicial independence correlates with greater political freedom. The results support the rejection of the null hypothesis that judicial independence has no effect on political freedom. However, there are limitations to the analysis due to the presence of confounding variables that are not a part of the study. There are immeasurable factors within countries that can impact political freedom, from nationalistic sentiments to political strife. Another limitation is the lack of data for some countries, where the dataset inputs an N/A value due to countries not being able to report or access certain measurements. With more time, I could improve my analysis by including more variables within the multiple regression that may influence political freedom to gain a clearer picture on what variables most impact political freedom in a statistically significant way. Additionally, expanding the analysis to include more countries would allow for a more comprehensive analysis.
+
+
 
