@@ -35,7 +35,7 @@ jcb_data <- read_excel("~/Downloads/jcb_data.xls")
 
 ## The Creation of Two New Variables
 
-The authors of the dataset indicated that political freedom is best measured by a joint assessment of the political rights index and democracy score. Therefore, I used these two provided variables to create a normalized score for political freedom by adding the Z-scores of each variable. This normalization is done to ensure that the resulting score for political freedom has a consistent scale and maintains the integrity of the data by accounting for variations in the original measurement scales of the political rights index and democracy score.
+The authors of the dataset indicated that political freedom is best measured by a joint assessment of the political rights index and democracy score. Therefore, I used these two provided variables to create a normalized score for political freedom by adding the Z-scores of each variable. This normalization is done to ensure that the resulting score for political freedom has a consistent scale and maintains the integrity of the data by accounting for differences in the distributions of the political rights index and democracy score.
 
 The second variable that I created was a region variable. With 71 countries in the dataset, I wanted to be able to group the countries by region to simplify my visualization of the dependent variable. The process of creating this region variable can be seen below. 
 
@@ -58,8 +58,8 @@ jcb_data <- jcb_data |>
                                    c_amer == 1 ~ "Central America",
                                    n_amer == 1 ~ "North America",
                                    oceania == 1 ~ "Oceania",
+                                   s_amer == 1 ~ "South America",
                                    meast == 1 ~ "Middle East",
-                                   america == 1 ~ "America",
                                    asia == 1 ~ "Asia",
                                    aurasia == 1 ~ "South Asia"))
 ```
